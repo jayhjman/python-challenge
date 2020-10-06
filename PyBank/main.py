@@ -25,10 +25,14 @@ bank_profits = []
 average_change = 0
 
 # Greatest increase and decrease
-greatest_increase = 0
-greatet_increase_index = 0
-greatest_decrease = 0
-greatest_decrease_index = 0
+greatest_increase = {
+    "index": 0,
+    "value": 0
+}
+greatest_decrease = {
+    "index": 0,
+    "value": 0
+}
 
 # Open csv file for reading
 with open(file_path) as csvfile:
@@ -41,9 +45,10 @@ with open(file_path) as csvfile:
 
     # Read each row of file
     for row in csvreader:
-        profit = {}
-        profit["date"] = row[0]
-        profit["profit"] = int(row[1])
+        profit = {
+            "date": row[0],
+            "profit": int(row[1])
+        }
         bank_profits.append(profit)
 
 # Sum the total amount of profit/losses
@@ -52,30 +57,39 @@ total_amount = 0
 # Keep a rolling total of the average change month over month
 average_total = 0
 
-# Loop through bank profits calculating values
+# Loop through bank profits calculating values (stopping 1 before the end)
 for i in range(len(bank_profits)-1):
 
     total_amount += bank_profits[i]["profit"]
     profit_change = bank_profits[i+1]["profit"] - bank_profits[i]["profit"]
     average_total += profit_change
 
-    if profit_change > greatest_increase:
-        greatest_increase = profit_change
-        greatest_increase_index = i
+    if profit_change > greatest_increase["value"]:
+        greatest_increase = {
+            "value": profit_change,
+            "index": i + 1
+        }
 
-    if profit_change < greatest_decrease:
-        greatest_decrease = profit_change
-        greatest_decrease_index = i
+    if profit_change < greatest_decrease["value"]:
+        greatest_decrease = {
+            "value": profit_change,
+            "index": i + 1
+        }
 
+# We stopped on short in the loop above, make sure to add final value
 total_amount += bank_profits[len(bank_profits)-1]["profit"]
 
+# Change will be 1 less value than months since month to month comparision
 average_change = average_total/(len(bank_profits)-1)
 
+# Print out the summary table
 print('Financial Analysis')
 print('--------------------------------------------------------')
 print(f'Total Months: {len(bank_profits)}')
 print(f'Total: ${total_amount}')
 print(f'Average  Change: ${round(average_change, 2)}')
-print(f'Greatest Increase in Profits: <Mth-Yr> $({greatest_increase})')
-print(f'Greatest Decrease in Profits: <Mth-Yr> $({greatest_decrease})')
+print(
+    f'Greatest Increase in Profits: {bank_profits[greatest_increase["index"]]["date"]} $({greatest_increase["value"]})')
+print(
+    f'Greatest Decrease in Profits: {bank_profits[greatest_decrease["index"]]["date"]} $({greatest_decrease["value"]})')
 print('--------------------------------------------------------')
