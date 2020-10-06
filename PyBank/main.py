@@ -43,9 +43,75 @@ def read_profits_from_csv(input_file):
 
 
 #
+# process_profits
+#
+# Take the bank profit list and calculate
+#    1. Total months being processed
+#    2. Total amount over all the months processed
+#    3. Average change in profile month over month
+#    4. Greatest increase in profit from month to month
+#    5. Greatest decrease in profit from month to month
+
+
+def process_profits(profits):
+
+    # Sum the total amount of profit/losses
+    total_amount = 0
+
+    # Average change month over month
+    average_change = 0
+
+    # Greatest increase and decrease month over month
+    greatest_increase = {
+        "index": 0,
+        "value": 0
+    }
+    greatest_decrease = {
+        "index": 0,
+        "value": 0
+    }
+
+    # Keep a rolling total of the average change month over month
+    average_total = 0
+
+    # Loop through bank profits calculating values (stopping 1 before the end to avoid index out of range issues)
+    for i in range(len(profits)-1):
+
+        # Count up totals for later calculations
+        total_amount += profits[i]["profit"]
+        profit_change = profits[i+1]["profit"] - profits[i]["profit"]
+        average_total += profit_change
+
+        # Track the greatest increase between months
+        if profit_change > greatest_increase["value"]:
+            greatest_increase = {
+                "value": profit_change,
+                "index": i + 1
+            }
+
+        # Track the greatest decrease between months
+        if profit_change < greatest_decrease["value"]:
+            greatest_decrease = {
+                "value": profit_change,
+                "index": i + 1
+            }
+
+    # We stopped on short in the loop above, make sure to add final value
+    total_amount += profits[len(profits)-1]["profit"]
+
+    # Change will be 1 less value than months since month to month comparision
+    average_change = average_total/(len(profits)-1)
+
+    # Return the values as a tuple
+    return (len(profits), total_amount, average_change, profits[greatest_increase["index"]]["date"], greatest_increase["value"],
+            profits[greatest_decrease["index"]]["date"], greatest_decrease["value"])
+
+
+#
 # output_results
 #
 # Output to console and file the string passed in
+
 
 def output_results(output_file, string_to_output):
 
@@ -75,66 +141,23 @@ def main():
     # List to hold the csv data in memory
     bank_profits = read_profits_from_csv(read_file)
 
-    # Average change
-    average_change = 0
-
-    # Greatest increase and decrease
-    greatest_increase = {
-        "index": 0,
-        "value": 0
-    }
-    greatest_decrease = {
-        "index": 0,
-        "value": 0
-    }
-
-    # Sum the total amount of profit/losses
-    total_amount = 0
-
-    # Keep a rolling total of the average change month over month
-    average_total = 0
-
-    # Loop through bank profits calculating values (stopping 1 before the end to avoid index out of range issues)
-    for i in range(len(bank_profits)-1):
-
-        # Count up totals for later calculations
-        total_amount += bank_profits[i]["profit"]
-        profit_change = bank_profits[i+1]["profit"] - bank_profits[i]["profit"]
-        average_total += profit_change
-
-        # Track the greatest increase between months
-        if profit_change > greatest_increase["value"]:
-            greatest_increase = {
-                "value": profit_change,
-                "index": i + 1
-            }
-
-        # Track the greatest decrease between months
-        if profit_change < greatest_decrease["value"]:
-            greatest_decrease = {
-                "value": profit_change,
-                "index": i + 1
-            }
-
-    # We stopped on short in the loop above, make sure to add final value
-    total_amount += bank_profits[len(bank_profits)-1]["profit"]
-
-    # Change will be 1 less value than months since month to month comparision
-    average_change = average_total/(len(bank_profits)-1)
+    # Process the bank profit list and return the summary values
+    (total_months, total, average, increase_month, increase,
+     decrease_month, decrease) = process_profits(bank_profits)
 
     # Create the output string
     output_string = 'Financial Analysis\n'
     output_string += '--------------------------------------------------------\n'
-    output_string += str.format(f'Total Months: {len(bank_profits)}\n')
-    output_string += str.format(f'Total: ${total_amount}\n')
+    output_string += str.format(f'Total Months: {total_months}\n')
+    output_string += str.format(f'Total: ${total}\n')
+    output_string += str.format(f'Average  Change: ${round(average, 2)}\n')
     output_string += str.format(
-        f'Average  Change: ${round(average_change, 2)}\n')
+        f'Greatest Increase in Profits: {increase_month} $({increase})\n')
     output_string += str.format(
-        f'Greatest Increase in Profits: {bank_profits[greatest_increase["index"]]["date"]} $({greatest_increase["value"]})\n')
-    output_string += str.format(
-        f'Greatest Decrease in Profits: {bank_profits[greatest_decrease["index"]]["date"]} $({greatest_decrease["value"]})\n')
+        f'Greatest Decrease in Profits: {decrease_month} $({decrease})\n')
     output_string += '--------------------------------------------------------'
 
+    # Output to both console and file
     output_results(write_file, output_string)
 
 
