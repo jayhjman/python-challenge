@@ -82,14 +82,17 @@ total_amount += bank_profits[len(bank_profits)-1]["profit"]
 # Change will be 1 less value than months since month to month comparision
 average_change = average_total/(len(bank_profits)-1)
 
+# Create the output string
+output_string = 'Financial Analysis\n'
+output_string += '--------------------------------------------------------\n'
+output_string += str.format(f'Total Months: {len(bank_profits)}\n')
+output_string += str.format(f'Total: ${total_amount}\n')
+output_string += str.format(f'Average  Change: ${round(average_change, 2)}\n')
+output_string += str.format(
+    f'Greatest Increase in Profits: {bank_profits[greatest_increase["index"]]["date"]} $({greatest_increase["value"]})\n')
+output_string += str.format(
+    f'Greatest Decrease in Profits: {bank_profits[greatest_decrease["index"]]["date"]} $({greatest_decrease["value"]})\n')
+output_string += '--------------------------------------------------------\n'
+
 # Print out the summary table
-print('Financial Analysis')
-print('--------------------------------------------------------')
-print(f'Total Months: {len(bank_profits)}')
-print(f'Total: ${total_amount}')
-print(f'Average  Change: ${round(average_change, 2)}')
-print(
-    f'Greatest Increase in Profits: {bank_profits[greatest_increase["index"]]["date"]} $({greatest_increase["value"]})')
-print(
-    f'Greatest Decrease in Profits: {bank_profits[greatest_decrease["index"]]["date"]} $({greatest_decrease["value"]})')
-print('--------------------------------------------------------')
+print(output_string)
