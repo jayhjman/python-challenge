@@ -11,25 +11,36 @@
 import os
 import csv
 
+
 # Find the path of the current file
 source_path = os.path.dirname(os.path.abspath(__file__))
 
 # Create file path and name to read
 file_path = os.path.join(source_path, 'Resources', 'budget_data.csv')
 
-print(f'file_path: {file_path}')
+# Count the number of months in the file
+number_of_months = 0
 
+# Sum the total amount of profit/losses
+total_amount = 0
+
+# Open csv file for reading
 with open(file_path) as csvfile:
 
     # CSV reader specifies delimiter and variable that holds contents
     csvreader = csv.reader(csvfile, delimiter=',')
 
-    print(csvreader)
-
-    # Read the header row first (skip this step if there is now header)
+    # Skip header row first as there is a header in the file
     csv_header = next(csvreader)
-    print(f"CSV Header: {csv_header}")
 
-    # Read each row of data after the header
+    # Read each row of file
     for row in csvreader:
-        print(row)
+        number_of_months += 1
+        total_amount += int(row[1])
+
+
+print('Financial Analysis')
+print('--------------------------------------------------------')
+print(f'Total Months: {number_of_months}')
+print(f'Total: ${total_amount}')
+print('--------------------------------------------------------')
