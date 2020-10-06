@@ -16,8 +16,8 @@ import csv
 source_path = os.path.dirname(os.path.abspath(__file__))
 
 # Create read/write file paths with file names
-read_file_path = os.path.join(source_path, 'Resources', 'budget_data.csv')
-write_file_path = os.path.join(source_path, 'analysis', 'results.txt')
+read_file = os.path.join(source_path, 'Resources', 'budget_data.csv')
+write_file = os.path.join(source_path, 'analysis', 'results.txt')
 
 # List to hold the csv data in memory
 bank_profits = []
@@ -36,7 +36,7 @@ greatest_decrease = {
 }
 
 # Open csv file for reading
-with open(read_file_path) as csvfile:
+with open(read_file) as csvfile:
 
     # CSV reader specifies delimiter and variable that holds contents
     csvreader = csv.reader(csvfile, delimiter=',')
@@ -102,6 +102,6 @@ output_string += '--------------------------------------------------------'
 print(output_string)
 
 # Write the output results text file
-results_file = open(write_file_path, 'w')
+results_file = open(write_file, 'w')
 num_of_chars = results_file.write(output_string)
 results_file.close()
