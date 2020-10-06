@@ -15,8 +15,9 @@ import csv
 # Find the path of the current file
 source_path = os.path.dirname(os.path.abspath(__file__))
 
-# Create file path and name to read
-file_path = os.path.join(source_path, 'Resources', 'budget_data.csv')
+# Create read/write file paths with file names
+read_file_path = os.path.join(source_path, 'Resources', 'budget_data.csv')
+write_file_path = os.path.join(source_path, 'analysis', 'results.txt')
 
 # List to hold the csv data in memory
 bank_profits = []
@@ -35,7 +36,7 @@ greatest_decrease = {
 }
 
 # Open csv file for reading
-with open(file_path) as csvfile:
+with open(read_file_path) as csvfile:
 
     # CSV reader specifies delimiter and variable that holds contents
     csvreader = csv.reader(csvfile, delimiter=',')
@@ -43,7 +44,7 @@ with open(file_path) as csvfile:
     # Skip header row first as there is a header in the file
     csv_header = next(csvreader)
 
-    # Read each row of file
+    # Read each row of file append to our list to be processed later
     for row in csvreader:
         profit = {
             "date": row[0],
@@ -60,16 +61,19 @@ average_total = 0
 # Loop through bank profits calculating values (stopping 1 before the end)
 for i in range(len(bank_profits)-1):
 
+    # Count up totals for later calculations
     total_amount += bank_profits[i]["profit"]
     profit_change = bank_profits[i+1]["profit"] - bank_profits[i]["profit"]
     average_total += profit_change
 
+    # Track the greatest increase between months
     if profit_change > greatest_increase["value"]:
         greatest_increase = {
             "value": profit_change,
             "index": i + 1
         }
 
+    # Track the greatest decrease between months
     if profit_change < greatest_decrease["value"]:
         greatest_decrease = {
             "value": profit_change,
@@ -92,7 +96,12 @@ output_string += str.format(
     f'Greatest Increase in Profits: {bank_profits[greatest_increase["index"]]["date"]} $({greatest_increase["value"]})\n')
 output_string += str.format(
     f'Greatest Decrease in Profits: {bank_profits[greatest_decrease["index"]]["date"]} $({greatest_decrease["value"]})\n')
-output_string += '--------------------------------------------------------\n'
+output_string += '--------------------------------------------------------'
 
 # Print out the summary table
 print(output_string)
+
+# Write the output results text file
+results_file = open(write_file_path, 'w')
+num_of_chars = results_file.write(output_string)
+results_file.close()
