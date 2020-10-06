@@ -39,7 +39,7 @@ def read_profits_from_csv(input_file):
             }
             profits.append(profit)
 
-        return profits
+    return profits
 
 
 #
