@@ -24,6 +24,13 @@ number_of_months = 0
 # Sum the total amount of profit/losses
 total_amount = 0
 
+# Average change
+average_change = 0
+
+# Greatest increase and decrease
+greatest_increase = 0
+greatest_decrease = 0
+
 # Open csv file for reading
 with open(file_path) as csvfile:
 
@@ -43,4 +50,7 @@ print('Financial Analysis')
 print('--------------------------------------------------------')
 print(f'Total Months: {number_of_months}')
 print(f'Total: ${total_amount}')
+print(f'Average  Change: ${average_change}')
+print(f'Greatest Increase in Profits: <Mth-Yr> $({greatest_increase})')
+print(f'Greatest Decrease in Profits: <Mth-Yr> g$({greatest_decrease})')
 print('--------------------------------------------------------')
