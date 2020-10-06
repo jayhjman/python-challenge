@@ -47,16 +47,26 @@ with open(file_path) as csvfile:
 # Sum the total amount of profit/losses
 total_amount = 0
 
+average_change_values = []
 # Loop through bank profits calculating values
-for i in range(len(bank_profits)):
+for i in range(len(bank_profits)-1):
     total_amount += bank_profits[i]["profit"]
+    average_change_values.append(
+        bank_profits[i+1]["profit"] - bank_profits[i]["profit"]
+    )
+total_amount += bank_profits[len(bank_profits)-1]["profit"]
 
+average_total = 0
+for i in range(len(average_change_values)):
+    average_total += average_change_values[i]
+
+average_change = average_total/len(average_change_values)
 
 print('Financial Analysis')
 print('--------------------------------------------------------')
 print(f'Total Months: {len(bank_profits)}')
 print(f'Total: ${total_amount}')
-print(f'Average  Change: ${average_change}')
+print(f'Average  Change: ${round(average_change, 2)}')
 print(f'Greatest Increase in Profits: <Mth-Yr> $({greatest_increase})')
 print(f'Greatest Decrease in Profits: <Mth-Yr> $({greatest_decrease})')
 print('--------------------------------------------------------')
