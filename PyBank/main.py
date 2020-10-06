@@ -26,7 +26,9 @@ average_change = 0
 
 # Greatest increase and decrease
 greatest_increase = 0
+greatet_increase_index = 0
 greatest_decrease = 0
+greatest_decrease_index = 0
 
 # Open csv file for reading
 with open(file_path) as csvfile:
@@ -47,20 +49,27 @@ with open(file_path) as csvfile:
 # Sum the total amount of profit/losses
 total_amount = 0
 
-average_change_values = []
+# Keep a rolling total of the average change month over month
+average_total = 0
+
 # Loop through bank profits calculating values
 for i in range(len(bank_profits)-1):
+
     total_amount += bank_profits[i]["profit"]
-    average_change_values.append(
-        bank_profits[i+1]["profit"] - bank_profits[i]["profit"]
-    )
+    profit_change = bank_profits[i+1]["profit"] - bank_profits[i]["profit"]
+    average_total += profit_change
+
+    if profit_change > greatest_increase:
+        greatest_increase = profit_change
+        greatest_increase_index = i
+
+    if profit_change < greatest_decrease:
+        greatest_decrease = profit_change
+        greatest_decrease_index = i
+
 total_amount += bank_profits[len(bank_profits)-1]["profit"]
 
-average_total = 0
-for i in range(len(average_change_values)):
-    average_total += average_change_values[i]
-
-average_change = average_total/len(average_change_values)
+average_change = average_total/(len(bank_profits)-1)
 
 print('Financial Analysis')
 print('--------------------------------------------------------')
