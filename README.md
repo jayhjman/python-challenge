@@ -16,9 +16,9 @@
 
 ## Results
 
-- ![Banking Results](PyBank/analysis/result.txt)
+- ![Banking Results](PyBank/analysis/results.txt)
 
-- ![Election Results](PyPoll/analysis/result.txt)
+- ![Election Results](PyPoll/analysis/results.txt)
 
 ## Execution
 
