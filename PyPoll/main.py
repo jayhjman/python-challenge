@@ -51,7 +51,13 @@ def proccess_voters(voters):
 
     # Loop through to get vote %
     for candidate in voter_summary.keys():
-        print(candidate)
+        votes = voter_summary[candidate]["votes"]
+        percent_votes = votes / len(voters) * 100
+        voter_summary[candidate].update({"percent_votes": percent_votes})
+
+    voter_summary = {"candidates": voter_summary}
+
+    voter_summary.update({"total_votes": len(voters)})
 
     return voter_summary
 
