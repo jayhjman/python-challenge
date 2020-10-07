@@ -1,6 +1,6 @@
 # Banking Profits/Losses and Election Results
 
-- **_Banking Profits/Losses_** - [Python program](<(PyBank/main.py)>) that analyzes the financial records of the given bank from Jan-2010 to Feb-2017 ([see data](PyBank/Resources/budget_data.csv)) . The purpose is show how many months the analysis covers, the total amount profit/losses, average change month over month, greatest monthly increase, and the greatest monthly decrease.
+- **_Banking Profits/Losses_** - [Python program](PyBank/main.py) that analyzes the financial records of the given bank from Jan-2010 to Feb-2017 ([see data](PyBank/Resources/budget_data.csv)) . The purpose is show how many months the analysis covers, the total amount profit/losses, average change month over month, greatest monthly increase, and the greatest monthly decrease.
 
 - **_Election Results_** - [Python program](PyPoll/main.py) that analyzes the election voter records for the given candidates ([see data](PyPoll/Resources/election_data.csv)). The purpose is show who won the election, the percentage and total breakdown of votes for each candidate, and final overall total vote count.
 
