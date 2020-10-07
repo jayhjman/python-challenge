@@ -102,9 +102,19 @@ def process_profits(profits):
     # Change will be 1 less value than months since month to month comparision
     average_change = average_total/(len(profits)-1)
 
-    # Return the values as a tuple
-    return (len(profits), total_amount, average_change, profits[greatest_increase["index"]]["date"], greatest_increase["value"],
-            profits[greatest_decrease["index"]]["date"], greatest_decrease["value"])
+    # Build the dictionary for the summary
+    bank_info = {
+        "total_months": len(profits),
+        "total_amount": total_amount,
+        "average_change": average_change,
+        "greatest_increase_month": profits[greatest_increase["index"]]["date"],
+        "greatest_increase_value": greatest_increase["value"],
+        "greatest_decrease_month": profits[greatest_decrease["index"]]["date"],
+        "greatest_decrease_value": greatest_decrease["value"],
+    }
+
+    # Return the bank info
+    return bank_info
 
 
 #
@@ -113,14 +123,27 @@ def process_profits(profits):
 # Output to console and file the string passed in
 
 
-def output_results(output_file, string_to_output):
+def output_results(output_file, bank_info):
+
+    # Create the output string
+    output_string = 'Financial Analysis\n'
+    output_string += '--------------------------------------------------------\n'
+    output_string += str.format(f'Total Months: {bank_info["total_months"]}\n')
+    output_string += str.format(f'Total: ${bank_info["total_amount"]}\n')
+    output_string += str.format(
+        f'Average  Change: ${round(bank_info["average_change"], 2)}\n')
+    output_string += str.format(
+        f'Greatest Increase in Profits: {bank_info["greatest_increase_month"]} $({bank_info["greatest_increase_value"]})\n')
+    output_string += str.format(
+        f'Greatest Decrease in Profits: {bank_info["greatest_decrease_month"]} $({bank_info["greatest_decrease_value"]})\n')
+    output_string += '--------------------------------------------------------'
 
     # Print out the summary table
-    print(string_to_output)
+    print(output_string)
 
     # Write the output results text file
     results_file = open(output_file, 'w')
-    num_of_chars = results_file.write(string_to_output)
+    num_of_chars = results_file.write(output_string)
     results_file.close()
 
 
@@ -142,23 +165,10 @@ def main():
     bank_profits = read_profits_from_csv(read_file)
 
     # Process the bank profit list and return the summary values
-    (total_months, total, average, increase_month, increase,
-     decrease_month, decrease) = process_profits(bank_profits)
-
-    # Create the output string
-    output_string = 'Financial Analysis\n'
-    output_string += '--------------------------------------------------------\n'
-    output_string += str.format(f'Total Months: {total_months}\n')
-    output_string += str.format(f'Total: ${total}\n')
-    output_string += str.format(f'Average  Change: ${round(average, 2)}\n')
-    output_string += str.format(
-        f'Greatest Increase in Profits: {increase_month} $({increase})\n')
-    output_string += str.format(
-        f'Greatest Decrease in Profits: {decrease_month} $({decrease})\n')
-    output_string += '--------------------------------------------------------'
+    bank_info = process_profits(bank_profits)
 
     # Output to both console and file
-    output_results(write_file, output_string)
+    output_results(write_file, bank_info)
 
 
 if __name__ == "__main__":
