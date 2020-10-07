@@ -49,7 +49,7 @@ Winner: Khan
 
 1. The assumption is that you have a working Python 3.6 environment
 1. Clone the [`git repository`](https://github.com/jayhjman/python-challenge) for this project
-1. Change into the [`repository directory`](.) and then into [`PyBank`](PyBank/) or [`PyPoll`](PyPoll/)
+1. Change into the [`repository directory`](/) and then into [`PyBank`](PyBank/) or [`PyPoll`](PyPoll/)
 1. Execute `main.py` via command line in the following manner `python main.py`
 1. This will execute against the `csv` file found under either [`PyBank`](PyBank/Resources/) or [`PyPoll`](PyPoll/Resources/) the `Resources` directory
 1. Results can be found under the `analysis` directory
