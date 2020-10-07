@@ -37,6 +37,25 @@ def read_voters_from_csv(input_file):
     return voters
 
 
+def proccess_voters(voters):
+
+    voter_summary = {}
+
+    # Loop through for voting counts
+    for voter in voters:
+        candidate = voter["candidate"]
+        if candidate in voter_summary:
+            voter_summary[candidate]["votes"] += 1
+        else:
+            voter_summary[candidate] = {"votes": 1}
+
+    # Loop through to get vote %
+    for candidate in voter_summary.keys():
+        print(candidate)
+
+    return voter_summary
+
+
 def main():
 
     # Find the path of the current file
@@ -49,6 +68,10 @@ def main():
     voters_list = read_voters_from_csv(read_file)
 
     print(len(voters_list))
+
+    summary_of_votes = proccess_voters(voters_list)
+
+    print(summary_of_votes)
 
 
 if __name__ == "__main__":
