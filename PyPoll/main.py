@@ -11,15 +11,26 @@ import os
 import csv
 
 #
-# read_voters_from_csv
+# process_votes_from_csv
 #
-# Read the file from the csv file and populate the voters list then
-# return the voters list back to the caller
+# Read the rows from the csv file and process the voter candidate information
+#
+# Process the data and produce a summary dictionary to include the following:
+#
+#    1. Total number of votes
+#    2. Total amount of votes for each candidate
+#    3. The percentage of votes each candidate received
+#    4. Determine the winner with the highest number of votes
 
 
-def read_voters_from_csv(input_file):
+def process_votes_from_csv(input_file):
 
-    voters = []
+    # Dictionaries to hold candidate information
+    candidates = {}
+    candidate_info = {}
+
+    # overall number of votes
+    total_overall_votes = 0
 
     # Open csv file for reading
     with open(input_file) as csvfile:
@@ -30,58 +41,38 @@ def read_voters_from_csv(input_file):
         # Skip header row first as there is a header in the file
         csv_header = next(csvreader)
 
-        # Read each row of file append to our list to be processed later
+        # Read each row and do the counts of votes overall and for each candidate
         for row in csvreader:
-            voter = {
-                "voter_id": row[0],
-                "county": row[1],
-                "candidate": row[2]
+            total_overall_votes += 1
+            if row[2] in candidates:
+                candidates[row[2]] += 1
+            else:
+                candidates[row[2]] = 1
+
+        # Loop to calculate the winner and calculate the %
+        winner = {
+            "candidate": "",
+            "votes": 0,
+        }
+        for candidate in candidates:
+
+            # calculate the percentage of votes to be added to the summary later
+            candidate_info[candidate] = {
+                "votes": candidates[candidate],
+                "percent_votes": (candidates[candidate] / total_overall_votes) * 100
             }
-            voters.append(voter)
 
-    return voters
+            # If this candidate's votes are higher than the last highest then they win
+            if candidates[candidate] > winner["votes"]:
+                winner["candidate"] = candidate
+                winner["votes"] = candidates[candidate]
 
-#
-# process_voters
-#
-# Take the election voter list and find
-#    1. Total number of votes
-#    2. Total amount of votes for each candidate
-#    3. The percentage of votes each candidate received
-#    4. Determine the winner with the highest number of votes
-
-
-def proccess_voters(voters):
-
-    voter_summary = {}
-
-    # Loop through for voting counts
-    for voter in voters:
-        candidate = voter["candidate"]
-        if candidate in voter_summary:
-            voter_summary[candidate]["votes"] += 1
-        else:
-            voter_summary[candidate] = {"votes": 1}
-
-    # Loop through to get vote % and the winner with highest count
-    winner = ""
-    vote_count = 0
-    for candidate in voter_summary:
-        votes = voter_summary[candidate]["votes"]
-        # if latest candidate has higher vote than last, could be the winner!
-        if votes > vote_count:
-            vote_count = votes
-            winner = candidate
-        percent_votes = votes / len(voters) * 100
-        voter_summary[candidate].update({"percent_votes": percent_votes})
-
-    # Make a nice dict with all the results in 1 package
-    voter_summary = {"candidates": voter_summary}
-
-    voter_summary.update({"total_votes": len(voters)})
-    voter_summary.update({"winner": winner})
-
-    return voter_summary
+    # Return the summary table
+    return {
+        "total_votes": total_overall_votes,
+        "candidates": candidate_info,
+        "winner": winner["candidate"],
+    }
 
 
 #
@@ -132,15 +123,13 @@ def main():
     read_file = os.path.join(source_path, 'Resources', 'election_data.csv')
     write_file = os.path.join(source_path, 'analysis', 'results.txt')
 
-    # Get the list of voters from the csv file
-    voters_list = read_voters_from_csv(read_file)
-
     # Get the summary breakdown of votes, %, totals, and winner
-    summary_of_votes = proccess_voters(voters_list)
+    summary_of_votes = process_votes_from_csv(read_file)
 
-    # Print out into the console and file the results
+    # Print the summary results to the console and files
     output_results(write_file, summary_of_votes)
 
 
+# Call the main function
 if __name__ == "__main__":
     main()
