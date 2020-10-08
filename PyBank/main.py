@@ -15,16 +15,16 @@ import csv
 #
 # process_profits_from_csv
 #
-# Read the rows from the csv file and as you go through them to calculate:
+# Read the rows from the csv file and as you go through them calculate the following:
 #
-#    1. Total months being processed
+#    1. Total months processed
 #    2. Total amount profit over all the months processed
 #    3. Average change in profit month over month
 #    4. Greatest increase in profit from month to month
 #    5. Greatest decrease in profit from month to month
 #
-# Algorithm processes by keeping previous months data and doing calculations
-# using the current month.
+# Algorithm processes by keeping previous months data and while reading the current month
+# and doing calculations between the two
 #
 
 def process_profits_from_csv(input_file):
