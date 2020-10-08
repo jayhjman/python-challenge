@@ -25,12 +25,17 @@ import csv
 
 def process_votes_from_csv(input_file):
 
-    # Dictionaries to hold candidate information
-    candidates = {}
+    # Dictionary to hold candidate information
     candidate_info = {}
 
-    # overall number of votes
+    # Overall number of votes
     total_overall_votes = 0
+
+    # Dictionary for winner information
+    winner = {
+        "candidate": "",
+        "votes": 0,
+    }
 
     # Open csv file for reading
     with open(input_file) as csvfile:
@@ -41,6 +46,9 @@ def process_votes_from_csv(input_file):
         # Skip header row first as there is a header in the file
         csv_header = next(csvreader)
 
+        # Dictionary to hold candidates
+        candidates = {}
+
         # Read each row and do the counts of votes overall and for each candidate
         for row in csvreader:
             total_overall_votes += 1
@@ -50,10 +58,6 @@ def process_votes_from_csv(input_file):
                 candidates[row[2]] = 1
 
         # Loop to calculate the winner and calculate the %
-        winner = {
-            "candidate": "",
-            "votes": 0,
-        }
         for candidate in candidates:
 
             # calculate the percentage of votes to be added to the summary later
